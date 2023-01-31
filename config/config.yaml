@@ -1,0 +1,28 @@
+
+# samples and directories
+sample_file: "../config/samples.tsv"
+sample_dir: "../input/fastq_files/"
+out_dir: "../results/"
+log_dir: "../results/logs/"
+
+# software settings
+trinity:
+  memory: 150G
+  cpus: 30
+bowtie:
+  cpus: 10
+blastp:
+  cpus: 30
+hmmer:
+  cpus: 8
+
+# databases
+databases:
+  pfam: "../resources/databases/Pfam-A.hmm" # preformated with > hmmpress Pfam-A.hmm
+  swiss_prot: "../resources/databases/uniprot_sprot.fasta" # preformated with > makeblastdb -in uniprot_sprot.fasta -dbtype prot
+
+# paths to scripts
+scripts:
+  map_script: "~/miniconda3/opt/trinity-2.1.1/util/support_scripts/get_Trinity_gene_to_trans_map.pl"
+  stats_script: "TrinityStats.pl"
+

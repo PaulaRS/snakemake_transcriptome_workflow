@@ -1,0 +1,98 @@
+################################################################################
+#
+# This workflow is designed to do de novo transcriptome assemblies for paired-
+# end reads and downstream analyses.
+# The workflow includes:
+#    - De novo assembly (Trinity)
+#    - Transcriptome assembly evaluation (with BUSCO and support scripts from Trinity)
+#    - Protein coding domains prediction (Transdescoder)
+#    - Protein functional annotation (with blastp and hmmer)
+#
+# This project has been implemented in Snakemake Python
+# Link : https://snakemake.readthedocs.io/en/stable/index.html
+#
+# Example command line :
+# > snakemake --configfile <config.yaml> --cores <max_n_cores> --use-conda
+#
+# To generate the pipeline diagram:
+# > snakemake --configfile <config.yaml> --dag | dot -Tsvg > dag.svg
+#
+################################################################################
+
+# Imports
+import shutil
+
+shell.prefix("set -euo pipefail;")
+# Setup report
+configfile: "../config/config.yaml"
+
+# This container defines the underlying OS for each job when using the workflow
+# with --use-conda
+container: "/data/prsilva/miniconda3/envs/snakemaketrans"
+
+# User defined sample names from text file
+file=open(config["sample_file"], "r")
+samples=file.read()
+SAMPLES=(samples.split("\n"))
+file.close()
+print (SAMPLES)
+
+# Directory with input samples
+INPUTDIR=config["sample_dir"]
+print("Input will be found in the following directory:", INPUTDIR)
+
+# Output directory
+OUTPUTDIR=config["out_dir"]
+print("Output will be found in the following directory:", OUTPUTDIR)
+
+# Relative output directories
+FASTQC_DIR = OUTPUTDIR + "fastqc/"
+ASSEMBLY_DIR = OUTPUTDIR + "trinity_assemblies/"
+STATS_DIR = OUTPUTDIR + "trinity_stats/"
+MAP_DIR = OUTPUTDIR + "trinity_map/"
+BLASTP_DIR = OUTPUTDIR + "blastp/"
+HMMSCAN_DIR = OUTPUTDIR + "hmmscan/"
+TRANSDECODER_DIR = OUTPUTDIR + "transdecoder/"
+LOG_DIR=OUTPUTDIR + config["log_dir"]
+
+onstart:
+
+    print("The samples used in this analysis are:")
+    print(SAMPLES)
+    print("Output will be found in the following directory:")
+    print(OUTPUTDIR)
+    print("Running the de novo transcriptome assembly pipeline")
+
+wildcard_constraints:
+    sample = '[A-Za-z0-9_-]+'
+
+rule all:
+    input:
+        expand(FASTQC_DIR + "{sample}_R1_fastqc.zip", sample=SAMPLES),
+        expand(FASTQC_DIR + "{sample}_R2_fastqc.zip", sample=SAMPLES),
+        expand(ASSEMBLY_DIR + "{sample}_trinity.Trinity.fasta", sample=SAMPLES),
+        expand(STATS_DIR + "{sample}_Trinity_stats.txt", sample=SAMPLES),
+        expand(MAP_DIR + "{sample}_gene_trans_map.txt", sample=SAMPLES),
+        expand(STATS_DIR + "{sample}_align_stats.txt", sample=SAMPLES),
+        expand("{sample}_trinity.Trinity.fasta.transdecoder_dir/longest_orfs.pep", sample=SAMPLES),
+        expand(BLASTP_DIR + "{sample}_blastp.outfmt", sample=SAMPLES),
+        expand(HMMSCAN_DIR + "{sample}_pfam.domtblout", sample=SAMPLES),
+        expand("{sample}_trinity.Trinity.fasta.transdecoder.pep", sample=SAMPLES)
+
+include:        "rules/fastqc.smk"
+include:        "rules/trinity.smk"
+include:        "rules/trinity_stats.smk"
+include:        "rules/gene_trans_map.smk"
+include:        "rules/run_bowtie.smk"
+include:        "rules/transdecoder_longorfs.smk"
+include:        "rules/blastp.smk"
+include:        "rules/hmmscan.smk"
+include:        "rules/transdecoder_predict.smk"
+
+onsuccess:
+    print("Transcriptome assemblies and stats finished!")
+    shutil.rmtree(".snakemake")
+
+onerror:
+    print(" the path to the log directory for debugging.")
+    shutil.rmtree(".snakemake")
