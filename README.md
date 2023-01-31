@@ -2,10 +2,11 @@
 
 This workflow is designed to do de novo transcriptome assemblies for paired-end reads and downstream analyses.
 It does:
+ - Quality check (fastqc)
  - De novo transcriptome assembly (Trinity)
- - Transcriptome assembly quality (with support scripts from Trinity)
- - Protein coding domains prediction (Transdescoder)
- - Protein functional annotation (with blastp and hmmer)
+ - Transcriptome assembly quality (with bowtie2 and support scripts from Trinity)
+ - Coding domains prediction (Transdescoder)
+ - Functional annotation (with blastp and hmmer)
 
 This project has been implemented in Snakemake Python
 https://snakemake.readthedocs.io/en/stable/index.html
