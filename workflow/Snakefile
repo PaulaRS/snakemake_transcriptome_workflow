@@ -4,7 +4,7 @@
 # end reads and downstream analyses.
 # The workflow includes:
 #    - De novo assembly (Trinity)
-#    - Transcriptome assembly evaluation (with BUSCO and support scripts from Trinity)
+#    - Transcriptome assembly evaluation (with support scripts from Trinity)
 #    - Protein coding domains prediction (Transdescoder)
 #    - Protein functional annotation (with blastp and hmmer)
 #
