@@ -1,21 +1,23 @@
 # snakemake_transcriptome_workflow
 
-This workflow is designed to do de novo transcriptome assemblies for paired-end reads and downstream analyses.
-It does:
+Reusable workflow for de novo transcriptome assembly for paired-end reads, protein prediction, annotation and quality checks.
+Includes:
  - Quality check (fastqc)
  - De novo transcriptome assembly (Trinity)
- - Transcriptome assembly quality (with bowtie2 and support scripts from Trinity)
- - Coding domains prediction (Transdescoder)
+ - Assembly quality checks (with bowtie2 and support scripts from Trinity)
+ - Prediction of open reading frames (Transdecoder)
  - Functional annotation (with blastp and hmmer)
 
-This project has been implemented in Snakemake Python
+This project uses Snakemake Python:
 https://snakemake.readthedocs.io/en/stable/index.html
 
-Example command line :
-> snakemake --configfile <config.yaml> --cores <max_n_cores> --use-conda
+Example command lines:
 
-Dry-run:
-> snakemake -np --configfile <config.yaml>
+Run
+> snakemake --configfile <config.yaml> --cores <max_n_cores> -p --use-conda
 
-To generate the pipeline diagram:
-> snakemake --configfile <config.yaml> --dag | dot -Tsvg > dag.svg
+Dry-run
+> snakemake -np --configfile <config.yaml> --use-conda
+
+Generate pipeline diagram 
+> snakemake --configfile <config.yaml> --dag | dot -Tsvg > dag.svg --use-conda
