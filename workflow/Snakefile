@@ -1,20 +1,26 @@
 ################################################################################
 #
-# This workflow is designed to do de novo transcriptome assemblies for paired-
+# This workflow is intended for de novo transcriptome assemblies from paired-
 # end reads and downstream analyses.
 # The workflow includes:
-#    - De novo assembly (Trinity)
-#    - Transcriptome assembly evaluation (with support scripts from Trinity)
-#    - Protein coding domains prediction (Transdescoder)
-#    - Protein functional annotation (with blastp and hmmer)
+#    - fastq quality check (fastqc)
+#    - De novo transcriptome assembly (Trinity)
+#    - Assembly quality checks (with bowtie2 and support scripts from Trinity)
+#    - Open reading frames and protein predictions (Transdescoder)
+#    - Functional annotation (with blastp and hmmer)
 #
 # This project has been implemented in Snakemake Python
 # Link : https://snakemake.readthedocs.io/en/stable/index.html
 #
-# Example command line :
-# > snakemake --configfile <config.yaml> --cores <max_n_cores> --use-conda
+# Example command lines:
+# 
+# Run
+# > snakemake --configfile <config.yaml> --cores <max_n_cores> -p --use-conda
 #
-# To generate the pipeline diagram:
+# Dry run
+# > snakemake -np --configfile <config.yaml> --use-conda
+#
+# Generate pipeline diagram
 # > snakemake --configfile <config.yaml> --dag | dot -Tsvg > dag.svg
 #
 ################################################################################
