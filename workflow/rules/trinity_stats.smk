@@ -4,6 +4,6 @@ rule trinity_stats:
     output:
         stats = STATS_DIR + "{sample}_Trinity_stats.txt"
     params:
-        scrpt = config["scripts"]["map_script"]
+        scrpt = config["scripts"]["stats_script"]
     shell:
         "{params.scrpt} {input.assembly} > {output.stats}"
