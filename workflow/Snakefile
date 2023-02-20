@@ -100,5 +100,5 @@ onsuccess:
     shutil.rmtree(".snakemake")
 
 onerror:
-    print(" the path to the log directory for debugging.")
+    print("Error: see the path to the log directory for debugging.")
     shutil.rmtree(".snakemake")
